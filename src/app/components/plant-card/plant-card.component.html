@@ -1,0 +1,16 @@
+<div class="plant-card" [class.needs-water]="needsWater()">
+  <img [src]="plant().imgUrl" [alt]="plant().name" class="plant-img" />
+  <h3>{{ plant().name }}</h3>
+
+  <div class="progress-bar">
+    <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+  </div>
+
+  <p>Waters every {{ plant().wateringFrequencyDays }} days</p>
+
+  <div class="card-actions">
+    <button (click)="onWatered()" class="btn-water">Watered! 💧</button>
+    <button (click)="onEdit()" class="btn-edit">Edit ✏️</button>
+    <button (click)="onDelete()" class="btn-delete">Delete 🗑️</button>
+  </div>
+</div>

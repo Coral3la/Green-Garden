@@ -1,0 +1,50 @@
+<form [formGroup]="plantForm" (ngSubmit)="onSubmit()" class="add-plant-form">
+  <h2>{{ plantToEdit() ? "Edit Plant 🌿" : "Add a New Plant 🌿" }}</h2>
+
+  <div class="form-field">
+    <label for="name">Name</label>
+    <input id="name" type="text" formControlName="name" />
+    @if (plantForm.controls.name.invalid && plantForm.controls.name.touched) {
+      <small class="error">
+        @if (plantForm.controls.name.errors?.["required"]) {
+          Name is required.
+        }
+        @if (plantForm.controls.name.errors?.["minlength"]) {
+          Name must be at least 2 characters.
+        }
+      </small>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="imgUrl">Image URL</label>
+    <input id="imgUrl" type="url" formControlName="imgUrl" />
+    @if (
+      plantForm.controls.imgUrl.invalid && plantForm.controls.imgUrl.touched
+    ) {
+      <small class="error">Image URL is required.</small>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="wateringFrequencyDays">Watering frequency (days)</label>
+    <input
+      id="wateringFrequencyDays"
+      type="number"
+      formControlName="wateringFrequencyDays"
+      min="1"
+    />
+    @if (
+      plantForm.controls.wateringFrequencyDays.invalid &&
+      plantForm.controls.wateringFrequencyDays.touched
+    ) {
+      <small class="error">Must be at least 1 day.</small>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="plantForm.invalid">
+      {{ plantToEdit() ? "Save Changes" : "Add Plant" }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,14 @@
+<section class="dashboard">
+  <h2>Garden Overview</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ totalPlants() }}</div>
+      <div class="stat-label">Total Plants 🌱</div>
+    </div>
+
+    <div class="stat-card" [class.alert]="plantsNeedingWater() > 0">
+      <div class="stat-value">{{ plantsNeedingWater() }}</div>
+      <div class="stat-label">Need Water 💧</div>
+    </div>
+  </div>
+</section>

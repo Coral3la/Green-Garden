@@ -1,0 +1,35 @@
+<div class="plant-list-header">
+  <h2>My Urban Garden 🌱</h2>
+  <button type="button" class="btn-add" (click)="openAddModal()">+ Add Plant</button>
+</div>
+
+@if (modalOpen()) {
+  <div
+    class="modal-backdrop"
+    (click)="closeModal()"
+    (document:keydown.escape)="closeModal()"
+  >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <app-add-plant-form
+        [plantToEdit]="editingPlant()"
+        (formSaved)="closeModal()"
+        (cancel)="closeModal()"
+      />
+    </div>
+  </div>
+}
+
+<div class="plant-grid">
+  @for (plant of plants(); track plant.id) {
+    <app-plant-card
+      [plant]="plant"
+      (watered)="onWatered($event)"
+      (delete)="onDelete($event)"
+      (edit)="openEditModal($event)"
+    />
+  }
+</div>
+
+@if (plants().length === 0) {
+  <p class="empty-state">No plants yet. Add one to get started! 🌱</p>
+}
