@@ -1,59 +1,76 @@
-# GreenGarden
+# 🌱 Green Garden
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.26.
+A simple plant-care tracker built with Angular. Add your houseplants, log when you water them, and see at a glance which ones are thirsty.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Plant collection** — add plants with a name, image, and watering frequency.
+- **Watering reminders** — dashboard highlights how many plants currently need water based on each plant's schedule.
+- **One-click watering** — mark a plant as watered to reset its timer.
+- **Local persistence** — your garden is saved to `localStorage`, so it survives page reloads.
+- **Reactive state** — built on Angular signals (`signal`, `computed`, `effect`).
 
-```bash
-ng serve
+## Tech Stack
+
+- [Angular 19](https://angular.dev/) (standalone components + signals)
+- TypeScript 5.7
+- RxJS 7.8
+- Karma + Jasmine for unit tests
+
+## Project Structure
+
+```
+src/app/
+├── components/
+│   ├── add-plant-form/   # form to add a new plant
+│   ├── dashboard/        # summary view (totals, plants needing water)
+│   ├── plant-card/       # individual plant tile with water/remove actions
+│   └── plant-list/       # grid of plant cards
+├── models/
+│   └── plant.model.ts    # Plant interface
+└── services/
+    └── plant.service.ts  # signal-based plant state + localStorage
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Getting Started
 
-## Code scaffolding
+### Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js 20+
+- npm 10+
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Install
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
+### Run locally
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Then open [http://localhost:4200](http://localhost:4200). The app reloads on file changes.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Build for production
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+Build artifacts are written to `dist/`.
 
-For end-to-end (e2e) testing, run:
+### Run unit tests
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## How it works
 
-## Additional Resources
+Plants are stored as a signal in [`PlantService`](src/app/services/plant.service.ts). A `computed` signal counts how many plants are overdue based on `lastWateredAt` and `wateringFrequencyDays`, and an `effect` mirrors every change into `localStorage` under the key `green-garden-plants`. On first load the app seeds a few starter plants (Aloe Vera, Monstera, Cactus).
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## License
+
+MIT

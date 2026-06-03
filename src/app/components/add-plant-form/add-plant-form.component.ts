@@ -20,6 +20,7 @@ export class AddPlantFormComponent {
   plantForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     imgUrl: ['', [Validators.required]],
+    location: ['', [Validators.required]],
     wateringFrequencyDays: [7, [Validators.required, Validators.min(1)]],
   });
 
@@ -30,6 +31,7 @@ export class AddPlantFormComponent {
         this.plantForm.setValue({
           name: plant.name,
           imgUrl: plant.imgUrl,
+          location: plant.location,
           wateringFrequencyDays: plant.wateringFrequencyDays,
         });
       } else {
@@ -43,7 +45,7 @@ export class AddPlantFormComponent {
       this.plantForm.markAllAsTouched();
       return;
     }
-    const { name, imgUrl, wateringFrequencyDays } =
+    const { name, imgUrl, location, wateringFrequencyDays } =
       this.plantForm.getRawValue();
     const plant = this.plantToEdit();
 
@@ -51,10 +53,11 @@ export class AddPlantFormComponent {
       this.plantService.updatePlant(plant.id, {
         name,
         imgUrl,
+        location,
         wateringFrequencyDays,
       });
     } else {
-      this.plantService.addPlant(name, imgUrl, wateringFrequencyDays);
+      this.plantService.addPlant(name, imgUrl, location, wateringFrequencyDays);
     }
 
     this.plantForm.reset();

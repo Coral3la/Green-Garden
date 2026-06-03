@@ -44,6 +44,7 @@ export class PlantService {
       const parsed = JSON.parse(raw) as Plant[];
       return parsed.map((p) => ({
         ...p,
+        location: p.location ?? '',
         lastWateredAt: new Date(p.lastWateredAt),
       }));
     } catch {
@@ -57,6 +58,7 @@ export class PlantService {
         name: 'Aloe Vera',
         imgUrl:
           'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=300',
+        location: 'Kitchen windowsill, bright light',
         wateringFrequencyDays: 7,
         lastWateredAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
       },
@@ -65,6 +67,7 @@ export class PlantService {
         name: 'Monstera',
         imgUrl:
           'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=300',
+        location: 'Living room, indirect light',
         wateringFrequencyDays: 5,
         lastWateredAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
       },
@@ -73,6 +76,7 @@ export class PlantService {
         name: 'Cactus',
         imgUrl:
           'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=300',
+        location: 'Bedroom, full sun',
         wateringFrequencyDays: 14,
         lastWateredAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       },
@@ -87,12 +91,18 @@ export class PlantService {
     );
   }
 
-  addPlant(name: string, imgUrl: string, wateringFrequencyDays: number): void {
+  addPlant(
+    name: string,
+    imgUrl: string,
+    location: string,
+    wateringFrequencyDays: number,
+  ): void {
     const newPlant: Plant = {
       id: crypto.randomUUID(),
-      name: name,
-      imgUrl: imgUrl,
-      wateringFrequencyDays: wateringFrequencyDays,
+      name,
+      imgUrl,
+      location,
+      wateringFrequencyDays,
       lastWateredAt: new Date(),
     };
     this.plantsSignal.update((plants) => [...plants, newPlant]);

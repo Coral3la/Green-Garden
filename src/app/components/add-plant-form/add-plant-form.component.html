@@ -27,6 +27,21 @@
   </div>
 
   <div class="form-field">
+    <label for="location">Location</label>
+    <input
+      id="location"
+      type="text"
+      formControlName="location"
+      placeholder="e.g. Living room, low light"
+    />
+    @if (
+      plantForm.controls.location.invalid && plantForm.controls.location.touched
+    ) {
+      <small class="error">Location is required.</small>
+    }
+  </div>
+
+  <div class="form-field">
     <label for="wateringFrequencyDays">Watering frequency (days)</label>
     <input
       id="wateringFrequencyDays"
