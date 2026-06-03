@@ -3,10 +3,11 @@ import { PlantCardComponent } from '../plant-card/plant-card.component';
 import { PlantService } from '../../services/plant.service';
 import { Plant } from '../../models/plant.model';
 import { AddPlantFormComponent } from '../add-plant-form/add-plant-form.component';
+import { BotanicExpertComponent } from '../botanic-expert/botanic-expert.component';
 
 @Component({
   selector: 'app-plant-list',
-  imports: [PlantCardComponent, AddPlantFormComponent],
+  imports: [PlantCardComponent, AddPlantFormComponent, BotanicExpertComponent],
   templateUrl: './plant-list.component.html',
   styleUrl: './plant-list.component.css',
 })
@@ -16,6 +17,7 @@ export class PlantListComponent {
 
   readonly modalOpen = signal(false);
   readonly editingPlant = signal<Plant | undefined>(undefined);
+  readonly consultingPlant = signal<Plant | undefined>(undefined);
 
   openAddModal(): void {
     this.editingPlant.set(undefined); // undefined = "add mode" in the form
@@ -46,5 +48,13 @@ export class PlantListComponent {
 
   onCancelEdit(): void {
     this.editingPlant.set(undefined);
+  }
+
+  openConsultModal(plant: Plant): void {
+    this.consultingPlant.set(plant);
+  }
+
+  closeConsultModal(): void {
+    this.consultingPlant.set(undefined);
   }
 }

@@ -107,3 +107,21 @@
   background: var(--color-danger);
   color: white;
 }
+
+.btn-consult {
+  margin-top: 0.5rem;
+  width: 100%;
+  border-radius: 6px;
+  padding: 0.55rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(90deg, #2f5d3a, #4caf50);
+  color: white;
+  border: 1px solid transparent;
+  transition: filter 0.2s ease;
+}
+
+.btn-consult:hover {
+  filter: brightness(1.08);
+}

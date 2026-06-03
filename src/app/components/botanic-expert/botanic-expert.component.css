@@ -1,0 +1,121 @@
+.consult {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  height: 600px;
+  margin: 0 auto;
+  border: 1px solid #e2e8e0;
+  border-radius: 16px;
+  background: #fdfdfb;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.consult__header {
+  padding: 16px 20px;
+  background: #2f5d3a;
+  color: #fff;
+}
+
+.consult__header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.consult__subtitle {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.consult__window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.consult__empty {
+  margin: auto;
+  text-align: center;
+  color: #8a958c;
+  font-size: 0.9rem;
+}
+
+.msg {
+  display: flex;
+}
+
+.msg--user {
+  justify-content: flex-end;
+}
+
+.msg--assistant {
+  justify-content: flex-start;
+}
+
+.msg__bubble {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.msg--user .msg__bubble {
+  background: #2f5d3a;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.msg--assistant .msg__bubble {
+  background: #eef2ee;
+  color: #1f2a22;
+  border-bottom-left-radius: 4px;
+}
+
+.msg__bubble--typing {
+  font-style: italic;
+  color: #6b766d;
+}
+
+.consult__error {
+  color: #b3261e;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.consult__input {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e2e8e0;
+}
+
+.consult__input textarea {
+  flex: 1;
+  resize: none;
+  padding: 10px 12px;
+  border: 1px solid #cdd6cf;
+  border-radius: 10px;
+  font: inherit;
+}
+
+.consult__input button {
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: #2f5d3a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.consult__input button:disabled {
+  background: #9db3a3;
+  cursor: not-allowed;
+}

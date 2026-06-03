@@ -26,9 +26,33 @@
       (watered)="onWatered($event)"
       (delete)="onDelete($event)"
       (edit)="openEditModal($event)"
+      (consult)="openConsultModal($event)"
     />
   }
 </div>
+
+@if (consultingPlant(); as plant) {
+  <div
+    class="modal-backdrop"
+    (click)="closeConsultModal()"
+    (document:keydown.escape)="closeConsultModal()"
+  >
+    <div
+      class="modal-content modal-content--consult"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        type="button"
+        class="modal-close"
+        (click)="closeConsultModal()"
+        aria-label="Close consultation"
+      >
+        ✕
+      </button>
+      <app-botanic-expert [plant]="plant" />
+    </div>
+  </div>
+}
 
 @if (plants().length === 0) {
   <p class="empty-state">No plants yet. Add one to get started! 🌱</p>

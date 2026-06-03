@@ -81,3 +81,30 @@
   border-radius: var(--radius);
   font-size: 1rem;
 }
+
+.modal-content--consult {
+  max-width: 600px;
+  position: relative;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.modal-close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  background: #f4f7f2;
+}

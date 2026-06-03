@@ -12,6 +12,7 @@ export class PlantCardComponent {
   readonly watered = output<string>();
   readonly delete = output<string>();
   readonly edit = output<Plant>();
+  readonly consult = output<Plant>();
 
   readonly progressPercent = computed(() => {
     const plant = this.plant();
@@ -36,5 +37,9 @@ export class PlantCardComponent {
 
   onEdit(): void {
     this.edit.emit(this.plant());
+  }
+
+  onConsult(): void {
+    this.consult.emit(this.plant());
   }
 }
