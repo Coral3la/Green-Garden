@@ -1,17 +1,23 @@
 <div class="consult">
   <header class="consult__header">
-    <h2>🌿 Botanic Expert Consultation</h2>
-    <p class="consult__subtitle">
-      Advice for your <strong>{{ plant().name }}</strong> in
-      {{ plant().location }}
-    </p>
+    <div class="consult__avatar" aria-hidden="true">🌿</div>
+    <div class="consult__heading">
+      <h2>Botanic Expert</h2>
+      <p class="consult__subtitle">
+        Caring for your <strong>{{ plant().name }}</strong>
+        @if (plant().location) {
+          · {{ plant().location }}
+        }
+      </p>
+    </div>
   </header>
 
   <div class="consult__window">
     @if (chatHistory().length === 0) {
       <div class="consult__empty">
-        Ask the expert anything about your {{ plant().name }} — watering,
-        light, yellowing leaves, repotting, and more.
+        <span class="consult__empty-icon" aria-hidden="true">🪴</span>
+        Ask anything about your {{ plant().name }} — watering, light,
+        yellowing leaves, repotting, and more.
       </div>
     }
 
@@ -27,7 +33,11 @@
 
     @if (isLoading()) {
       <div class="msg msg--assistant">
-        <div class="msg__bubble msg__bubble--typing">Consulting…</div>
+        <div class="msg__bubble msg__bubble--typing">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
       </div>
     }
 
@@ -44,6 +54,8 @@
       (ngModelChange)="userInput.set($event)"
       (keydown)="onKeydown($event)"
     ></textarea>
-    <button (click)="sendMessage()" [disabled]="!canSend()">Send</button>
+    <button (click)="sendMessage()" [disabled]="!canSend()" aria-label="Send message">
+      <span aria-hidden="true">↑</span>
+    </button>
   </div>
 </div>

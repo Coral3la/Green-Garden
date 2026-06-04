@@ -1,18 +1,41 @@
-<div class="plant-card" [class.needs-water]="needsWater()">
-  <img [src]="plant().imgUrl" [alt]="plant().name" class="plant-img" />
-  <h3>{{ plant().name }}</h3>
-
-  <div class="progress-bar">
-    <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+<article class="plant-card" [class.needs-water]="needsWater()">
+  <div class="plant-card__media">
+    <img [src]="plant().imgUrl" [alt]="plant().name" class="plant-img" />
+    <span class="status-badge">
+      <span class="status-badge__dot"></span>
+      {{ needsWater() ? "Needs water" : "Thriving" }}
+    </span>
   </div>
 
-  <p>Waters every {{ plant().wateringFrequencyDays }} days</p>
+  <div class="plant-card__body">
+    <h3 class="plant-card__name">{{ plant().name }}</h3>
+    @if (plant().location) {
+      <p class="plant-card__location">
+        <span class="plant-card__pin" aria-hidden="true">📍</span>
+        {{ plant().location }}
+      </p>
+    }
 
-  <div class="card-actions">
-    <button (click)="onWatered()" class="btn-water">Watered! 💧</button>
-    <button (click)="onEdit()" class="btn-edit">Edit ✏️</button>
-    <button (click)="onDelete()" class="btn-delete">Delete 🗑️</button>
+    <div class="water-meter">
+      <div class="water-meter__head">
+        <span class="water-meter__label">Watering schedule</span>
+        <span class="water-meter__freq">every {{ plant().wateringFrequencyDays }} days</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+    </div>
+
+    <div class="card-actions">
+      <button (click)="onWatered()" class="btn-water">
+        <span aria-hidden="true">💧</span> Watered
+      </button>
+      <button (click)="onEdit()" class="btn-icon btn-edit" aria-label="Edit plant" title="Edit">✏️</button>
+      <button (click)="onDelete()" class="btn-icon btn-delete" aria-label="Delete plant" title="Delete">🗑️</button>
+    </div>
+
+    <button (click)="onConsult()" class="btn-consult">
+      <span aria-hidden="true">🤖</span> Ask the Botanic Expert
+    </button>
   </div>
-
-  <button (click)="onConsult()" class="btn-consult">Ask Expert 🤖</button>
-</div>
+</article>

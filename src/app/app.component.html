@@ -1,11 +1,21 @@
-<header class="app-header">
-  <div class="container">
-    <h1>🌱 Green Garden</h1>
-    <p class="tagline">Keep your urban garden thriving</p>
-  </div>
-</header>
+<div class="page container">
+  <header class="hero">
+    <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
+    <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
 
-<main class="container">
-  <app-dashboard />
-  <app-plant-list />
-</main>
+    <div class="hero__content">
+      <span class="hero__eyebrow">
+        <span class="hero__seed">🌱</span> Urban plant care, refined
+      </span>
+      <h1 class="hero__title">Green&nbsp;Garden</h1>
+      <p class="tagline">
+        Track watering, consult a botanic expert, and keep every leaf thriving.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <app-dashboard />
+    <app-plant-list />
+  </main>
+</div>

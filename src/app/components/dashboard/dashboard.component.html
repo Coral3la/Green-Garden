@@ -1,14 +1,20 @@
 <section class="dashboard">
-  <h2>Garden Overview</h2>
+  <h2 class="section-eyebrow">Garden Overview</h2>
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-value">{{ totalPlants() }}</div>
-      <div class="stat-label">Total Plants 🌱</div>
-    </div>
+    <article class="stat-card">
+      <span class="stat-card__icon" aria-hidden="true">🌿</span>
+      <div class="stat-card__body">
+        <div class="stat-value">{{ totalPlants() }}</div>
+        <div class="stat-label">Plants in your garden</div>
+      </div>
+    </article>
 
-    <div class="stat-card" [class.alert]="plantsNeedingWater() > 0">
-      <div class="stat-value">{{ plantsNeedingWater() }}</div>
-      <div class="stat-label">Need Water 💧</div>
-    </div>
+    <article class="stat-card" [class.alert]="plantsNeedingWater() > 0">
+      <span class="stat-card__icon" aria-hidden="true">💧</span>
+      <div class="stat-card__body">
+        <div class="stat-value">{{ plantsNeedingWater() }}</div>
+        <div class="stat-label">Need watering today</div>
+      </div>
+    </article>
   </div>
 </section>

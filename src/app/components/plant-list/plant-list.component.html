@@ -1,6 +1,12 @@
 <div class="plant-list-header">
-  <h2>My Urban Garden 🌱</h2>
-  <button type="button" class="btn-add" (click)="openAddModal()">+ Add Plant</button>
+  <div class="plant-list-header__titles">
+    <span class="section-eyebrow">Your collection</span>
+    <h2 class="plant-list-title">My Urban Garden</h2>
+  </div>
+  <button type="button" class="btn-add" (click)="openAddModal()">
+    <span class="btn-add__plus" aria-hidden="true">+</span>
+    Add Plant
+  </button>
 </div>
 
 @if (modalOpen()) {
@@ -55,5 +61,9 @@
 }
 
 @if (plants().length === 0) {
-  <p class="empty-state">No plants yet. Add one to get started! 🌱</p>
+  <div class="empty-state">
+    <div class="empty-state__icon" aria-hidden="true">🪴</div>
+    <p class="empty-state__title">Your garden is empty</p>
+    <p class="empty-state__hint">Add your first plant to start tracking its care.</p>
+  </div>
 }

@@ -1,56 +1,115 @@
 .dashboard {
-  margin-bottom: 2rem;
-}
-
-.dashboard h2 {
-  font-size: 1.25rem;
-  color: var(--color-muted);
-  font-weight: 600;
-  margin-bottom: 1rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  margin-bottom: 2.5rem;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
 }
 
 .stat-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.6rem;
+  box-shadow: var(--shadow-sm), var(--shadow-inset);
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+  animation: card-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.stat-card:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+/* accent stripe */
+.stat-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--sprout-bright), var(--leaf));
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-md);
 }
 
-.stat-card.alert {
-  border-color: var(--color-water);
-  background: var(--color-water-soft);
+.stat-card__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 18px;
+  font-size: 1.5rem;
+  background: var(--sprout-soft);
+  border: 1px solid color-mix(in srgb, var(--sprout) 30%, transparent);
 }
 
 .stat-value {
-  font-size: 2.75rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  line-height: 1;
-}
-
-.stat-card.alert .stat-value {
-  color: var(--color-water);
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 560;
+  color: var(--leaf-deep);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
-  margin-top: 0.5rem;
-  color: var(--color-muted);
-  font-size: 0.95rem;
+  margin-top: 0.4rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
   font-weight: 500;
+}
+
+/* Alert state — something is thirsty */
+.stat-card.alert::before {
+  background: linear-gradient(180deg, #64b5f6, var(--water));
+}
+
+.stat-card.alert {
+  border-color: color-mix(in srgb, var(--water) 35%, var(--line));
+  background: linear-gradient(180deg, var(--surface), var(--water-soft));
+}
+
+.stat-card.alert .stat-card__icon {
+  background: var(--water-soft);
+  border-color: color-mix(in srgb, var(--water) 30%, transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.stat-card.alert .stat-value {
+  color: var(--water-deep);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(47, 134, 196, 0.35);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(47, 134, 196, 0);
+  }
 }

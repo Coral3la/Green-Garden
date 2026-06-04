@@ -1,127 +1,268 @@
 .plant-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1rem;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   display: flex;
   flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  animation: card-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .plant-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-6px);
   box-shadow: var(--shadow-md);
 }
 
 .plant-card.needs-water {
-  border-color: var(--color-water);
-  background: var(--color-water-soft);
+  border-color: color-mix(in srgb, var(--water) 40%, var(--line));
 }
 
-.plant-card h3 {
-  font-size: 1.1rem;
-  margin: 0.75rem 0 0.5rem;
-  color: var(--color-text);
-}
-
-.plant-card p {
-  margin: 0.25rem 0 1rem;
-  color: var(--color-muted);
-  font-size: 0.9rem;
+/* ---------- Media ---------- */
+.plant-card__media {
+  position: relative;
+  height: 184px;
+  overflow: hidden;
 }
 
 .plant-img {
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.plant-card:hover .plant-img {
+  transform: scale(1.07);
+}
+
+.plant-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 32, 22, 0.28) 0%, transparent 38%);
+  pointer-events: none;
+}
+
+.status-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--leaf-deep);
+  background: rgba(252, 251, 244, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 10px -4px rgba(15, 32, 22, 0.4);
+}
+
+.status-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sprout) 30%, transparent);
+}
+
+.needs-water .status-badge {
+  color: var(--water-deep);
+}
+
+.needs-water .status-badge__dot {
+  background: var(--water);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--water) 30%, transparent);
+  animation: blink 1.4s ease-in-out infinite;
+}
+
+/* ---------- Body ---------- */
+.plant-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.1rem 1.2rem 1.25rem;
+}
+
+.plant-card__name {
+  font-size: 1.3rem;
+  font-weight: 540;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.plant-card__location {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.3rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plant-card__pin {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ---------- Water meter ---------- */
+.water-meter {
+  margin: 1.1rem 0 1.25rem;
+}
+
+.water-meter__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.45rem;
+}
+
+.water-meter__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.water-meter__freq {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--leaf);
+}
+
+.needs-water .water-meter__freq {
+  color: var(--water-deep);
 }
 
 .progress-bar {
-  height: 6px;
-  background: #eef2ee;
+  height: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
   border-radius: 999px;
   overflow: hidden;
-  margin: 0.75rem 0 0.25rem;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4caf50, #81c784);
-  transition: width 0.3s ease;
   border-radius: 999px;
+  background: linear-gradient(90deg, var(--leaf), var(--sprout-bright));
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .plant-card.needs-water .progress-fill {
-  background: linear-gradient(90deg, #2196f3, #64b5f6);
+  background: linear-gradient(90deg, var(--water), #64b5f6);
 }
 
+/* ---------- Actions ---------- */
 .card-actions {
   display: flex;
   gap: 0.5rem;
   margin-top: auto;
 }
 
-.card-actions button {
+.btn-water {
   flex: 1;
-  border-radius: 6px;
-  padding: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 11px;
+  padding: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, var(--leaf), var(--leaf-deep));
   border: 1px solid transparent;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.btn-water {
-  background: var(--color-primary);
-  color: white;
-  border-color: var(--color-primary);
+.needs-water .btn-water {
+  background: linear-gradient(135deg, var(--water), var(--water-deep));
 }
 
 .btn-water:hover {
-  background: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
+  filter: brightness(1.07);
+  box-shadow: 0 8px 18px -8px rgba(28, 68, 41, 0.7);
 }
 
-.btn-edit {
-  background: transparent;
-  color: var(--color-muted);
-  border-color: var(--color-border);
+.btn-water:active {
+  transform: translateY(1px);
+}
+
+.btn-icon {
+  width: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 11px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
 .btn-edit:hover {
-  background: #f4f7f2;
-  color: var(--color-text);
-}
-
-.btn-delete {
-  background: transparent;
-  color: var(--color-danger);
-  border-color: var(--color-danger);
+  background: var(--sprout-soft);
+  border-color: color-mix(in srgb, var(--sprout) 40%, transparent);
+  transform: translateY(-1px);
 }
 
 .btn-delete:hover {
-  background: var(--color-danger);
-  color: white;
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+  transform: translateY(-1px);
 }
 
+/* ---------- Consult ---------- */
 .btn-consult {
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   width: 100%;
-  border-radius: 6px;
-  padding: 0.55rem;
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 11px;
+  padding: 0.62rem;
+  font-size: 0.86rem;
   font-weight: 600;
   cursor: pointer;
-  background: linear-gradient(90deg, #2f5d3a, #4caf50);
-  color: white;
-  border: 1px solid transparent;
-  transition: filter 0.2s ease;
+  color: var(--leaf-deep);
+  background: var(--sprout-soft);
+  border: 1px solid color-mix(in srgb, var(--sprout) 35%, transparent);
+  transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-consult:hover {
-  filter: brightness(1.08);
+  background: linear-gradient(135deg, var(--sprout) 0%, var(--leaf) 100%);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -8px rgba(47, 107, 65, 0.7);
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }

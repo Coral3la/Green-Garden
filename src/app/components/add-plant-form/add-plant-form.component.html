@@ -1,9 +1,15 @@
 <form [formGroup]="plantForm" (ngSubmit)="onSubmit()" class="add-plant-form">
-  <h2>{{ plantToEdit() ? "Edit Plant 🌿" : "Add a New Plant 🌿" }}</h2>
+  <header class="form-head">
+    <span class="form-head__icon" aria-hidden="true">🌿</span>
+    <div>
+      <span class="section-eyebrow">{{ plantToEdit() ? "Update details" : "New addition" }}</span>
+      <h2 class="form-head__title">{{ plantToEdit() ? "Edit Plant" : "Add a New Plant" }}</h2>
+    </div>
+  </header>
 
   <div class="form-field">
     <label for="name">Name</label>
-    <input id="name" type="text" formControlName="name" />
+    <input id="name" type="text" formControlName="name" placeholder="e.g. Monstera Deliciosa" />
     @if (plantForm.controls.name.invalid && plantForm.controls.name.touched) {
       <small class="error">
         @if (plantForm.controls.name.errors?.["required"]) {
@@ -18,7 +24,7 @@
 
   <div class="form-field">
     <label for="imgUrl">Image URL</label>
-    <input id="imgUrl" type="url" formControlName="imgUrl" />
+    <input id="imgUrl" type="url" formControlName="imgUrl" placeholder="https://…" />
     @if (
       plantForm.controls.imgUrl.invalid && plantForm.controls.imgUrl.touched
     ) {
@@ -58,7 +64,8 @@
   </div>
 
   <div class="form-actions">
-    <button type="submit" [disabled]="plantForm.invalid">
+    <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-submit" [disabled]="plantForm.invalid">
       {{ plantToEdit() ? "Save Changes" : "Add Plant" }}
     </button>
   </div>
