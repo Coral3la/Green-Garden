@@ -62,6 +62,7 @@ export class PlantService {
     location: string,
     wateringFrequencyDays: number,
   ): void {
+    this.error.set(null);
     const body = { name, imgUrl, location, wateringFrequencyDays };
     this.http.post<PlantDto>(this.baseUrl, body).subscribe({
       next: (dto) =>
@@ -74,6 +75,7 @@ export class PlantService {
   }
 
   updatePlant(id: string, updates: Partial<Omit<Plant, 'id'>>): void {
+    this.error.set(null);
     this.http.patch<PlantDto>(`${this.baseUrl}/${id}`, updates).subscribe({
       next: (dto) => this.replaceInCache(dto),
       error: (err) => {
@@ -84,6 +86,7 @@ export class PlantService {
   }
 
   waterPlant(id: string): void {
+    this.error.set(null);
     const lastWateredAt = new Date().toISOString();
     this.http
       .patch<PlantDto>(`${this.baseUrl}/${id}`, { lastWateredAt })
@@ -97,6 +100,7 @@ export class PlantService {
   }
 
   removePlant(id: string): void {
+    this.error.set(null);
     this.http.delete<void>(`${this.baseUrl}/${id}`).subscribe({
       next: () =>
         this.plantsSignal.update((plants) =>

@@ -14,6 +14,8 @@ import { BotanicExpertComponent } from '../botanic-expert/botanic-expert.compone
 export class PlantListComponent {
   private plantService = inject(PlantService);
   readonly plants = this.plantService.plants;
+  readonly loading = this.plantService.loading;
+  readonly error = this.plantService.error;
 
   readonly modalOpen = signal(false);
   readonly editingPlant = signal<Plant | undefined>(undefined);
@@ -42,12 +44,8 @@ export class PlantListComponent {
     this.plantService.removePlant(id);
   }
 
-  onFormSaved(): void {
-    this.editingPlant.set(undefined);
-  }
-
-  onCancelEdit(): void {
-    this.editingPlant.set(undefined);
+  retryLoad(): void {
+    this.plantService.loadPlants();
   }
 
   openConsultModal(plant: Plant): void {
