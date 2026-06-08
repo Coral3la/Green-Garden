@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  openAiApiKey: '',
+  production: true,
+  apiUrl: 'http://localhost:8000',
 };
