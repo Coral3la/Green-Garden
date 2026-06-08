@@ -1,5 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { Plant } from '../../models/plant.model';
+import { wateringProgress } from '../../models/watering';
 
 @Component({
   selector: 'app-plant-card',
@@ -14,16 +15,8 @@ export class PlantCardComponent {
   readonly edit = output<Plant>();
   readonly consult = output<Plant>();
 
-  readonly progressPercent = computed(() => {
-    const plant = this.plant();
-    const msSinceWatered = Date.now() - new Date(plant.lastWateredAt).getTime();
-    const daysSinceWatered = msSinceWatered / (1000 * 60 * 60 * 24);
-    const ratio = daysSinceWatered / plant.wateringFrequencyDays;
-    return Math.min(100, Math.max(0, ratio * 100));
-  });
-  readonly needsWater = computed(() => {
-    return this.progressPercent() >= 100;
-  });
+  readonly progressPercent = computed(() => wateringProgress(this.plant()));
+  readonly needsWater = computed(() => this.progressPercent() >= 100);
 
   onWatered(): void {
     this.watered.emit(this.plant().id);

@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Plant } from '../models/plant.model';
+import { needsWater } from '../models/watering';
 
 interface PlantDto {
   id: string;
@@ -23,14 +24,9 @@ export class PlantService {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly totalPlants = computed(() => this.plants().length);
-  readonly plantsNeedingWater = computed(() => {
-    const now = Date.now();
-    const msPerDay = 1000 * 60 * 60 * 24;
-    return this.plants().filter((plant) => {
-      const timePassed = now - new Date(plant.lastWateredAt).getTime();
-      return timePassed / msPerDay >= plant.wateringFrequencyDays;
-    }).length;
-  });
+  readonly plantsNeedingWater = computed(
+    () => this.plants().filter(needsWater).length,
+  );
 
   constructor() {
     this.loadPlants();
@@ -49,8 +45,11 @@ export class PlantService {
         this.loading.set(false);
       },
       error: (err) => {
-        console.error('Failed to load plants', err);
-        this.error.set('Could not load your plants. Is the backend running?');
+        this.fail(
+          'Failed to load plants',
+          'Could not load your plants. Is the backend running?',
+          err,
+        );
         this.loading.set(false);
       },
     });
@@ -67,10 +66,12 @@ export class PlantService {
     this.http.post<PlantDto>(this.baseUrl, body).subscribe({
       next: (dto) =>
         this.plantsSignal.update((plants) => [...plants, this.toPlant(dto)]),
-      error: (err) => {
-        console.error('Failed to add plant', err);
-        this.error.set('Could not add the plant. Please try again.');
-      },
+      error: (err) =>
+        this.fail(
+          'Failed to add plant',
+          'Could not add the plant. Please try again.',
+          err,
+        ),
     });
   }
 
@@ -78,10 +79,12 @@ export class PlantService {
     this.error.set(null);
     this.http.patch<PlantDto>(`${this.baseUrl}/${id}`, updates).subscribe({
       next: (dto) => this.replaceInCache(dto),
-      error: (err) => {
-        console.error('Failed to update plant', err);
-        this.error.set('Could not save changes. Please try again.');
-      },
+      error: (err) =>
+        this.fail(
+          'Failed to update plant',
+          'Could not save changes. Please try again.',
+          err,
+        ),
     });
   }
 
@@ -92,10 +95,12 @@ export class PlantService {
       .patch<PlantDto>(`${this.baseUrl}/${id}`, { lastWateredAt })
       .subscribe({
         next: (dto) => this.replaceInCache(dto),
-        error: (err) => {
-          console.error('Failed to water plant', err);
-          this.error.set('Could not record watering. Please try again.');
-        },
+        error: (err) =>
+          this.fail(
+            'Failed to water plant',
+            'Could not record watering. Please try again.',
+            err,
+          ),
       });
   }
 
@@ -106,10 +111,12 @@ export class PlantService {
         this.plantsSignal.update((plants) =>
           plants.filter((plant) => plant.id !== id),
         ),
-      error: (err) => {
-        console.error('Failed to remove plant', err);
-        this.error.set('Could not delete the plant. Please try again.');
-      },
+      error: (err) =>
+        this.fail(
+          'Failed to remove plant',
+          'Could not delete the plant. Please try again.',
+          err,
+        ),
     });
   }
 
@@ -118,5 +125,11 @@ export class PlantService {
     this.plantsSignal.update((plants) =>
       plants.map((plant) => (plant.id === updated.id ? updated : plant)),
     );
+  }
+
+  // Logs the technical error for us and shows a friendly message to the user.
+  private fail(logMessage: string, userMessage: string, err: unknown): void {
+    console.error(logMessage, err);
+    this.error.set(userMessage);
   }
 }

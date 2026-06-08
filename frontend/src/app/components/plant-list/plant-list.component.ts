@@ -17,8 +17,14 @@ export class PlantListComponent {
   readonly loading = this.plantService.loading;
   readonly error = this.plantService.error;
 
+  // --- Add / edit plant modal ---
+  // modalOpen says whether the form is showing; editingPlant says which plant
+  // we're editing (undefined = "add a new plant" mode).
   readonly modalOpen = signal(false);
   readonly editingPlant = signal<Plant | undefined>(undefined);
+
+  // --- "Ask the expert" modal ---
+  // A plant here = the modal is open for that plant; undefined = it's closed.
   readonly consultingPlant = signal<Plant | undefined>(undefined);
 
   openAddModal(): void {
@@ -36,6 +42,14 @@ export class PlantListComponent {
     this.editingPlant.set(undefined); // reset so next "Add" doesn't reopen in edit mode
   }
 
+  openConsultModal(plant: Plant): void {
+    this.consultingPlant.set(plant);
+  }
+
+  closeConsultModal(): void {
+    this.consultingPlant.set(undefined);
+  }
+
   onWatered(id: string): void {
     this.plantService.waterPlant(id);
   }
@@ -46,13 +60,5 @@ export class PlantListComponent {
 
   retryLoad(): void {
     this.plantService.loadPlants();
-  }
-
-  openConsultModal(plant: Plant): void {
-    this.consultingPlant.set(plant);
-  }
-
-  closeConsultModal(): void {
-    this.consultingPlant.set(undefined);
   }
 }

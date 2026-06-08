@@ -9,6 +9,9 @@ router = APIRouter(prefix="/plants", tags=["plants"])
 
 COLLECTION = "plants"
 
+# Reused wherever we can't find a plant, so the message stays consistent.
+PLANT_NOT_FOUND = HTTPException(status_code=404, detail="Plant not found")
+
 
 def serialize_plant(doc: dict) -> dict:
     """Convert a MongoDB document into the shape PlantOut expects."""
@@ -22,7 +25,7 @@ def to_object_id(plant_id: str) -> ObjectId:
     try:
         return ObjectId(plant_id)
     except InvalidId:
-        raise HTTPException(status_code=404, detail="Plant not found")
+        raise PLANT_NOT_FOUND
 
 
 @router.get("", response_model=list[PlantOut])
@@ -45,7 +48,7 @@ async def get_plant(plant_id: str):
     db = get_database()
     doc = await db[COLLECTION].find_one({"_id": to_object_id(plant_id)})
     if doc is None:
-        raise HTTPException(status_code=404, detail="Plant not found")
+        raise PLANT_NOT_FOUND
     return serialize_plant(doc)
 
 
@@ -58,7 +61,7 @@ async def update_plant(plant_id: str, updates: PlantUpdate):
         raise HTTPException(status_code=400, detail="No fields provided to update")
     result = await db[COLLECTION].update_one({"_id": oid}, {"$set": changes})
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Plant not found")
+        raise PLANT_NOT_FOUND
     doc = await db[COLLECTION].find_one({"_id": oid})
     return serialize_plant(doc)
 
@@ -68,4 +71,4 @@ async def delete_plant(plant_id: str):
     db = get_database()
     result = await db[COLLECTION].delete_one({"_id": to_object_id(plant_id)})
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Plant not found")
+        raise PLANT_NOT_FOUND
