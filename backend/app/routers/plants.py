@@ -16,7 +16,7 @@ PLANT_NOT_FOUND = HTTPException(status_code=404, detail="Plant not found")
 def serialize_plant(doc: dict) -> dict:
     """Convert a MongoDB document into the shape PlantOut expects."""
     doc = dict(doc)
-    doc["id"] = str(doc.pop("_id"))   # rename _id → id, ObjectId → str
+    doc["id"] = str(doc.pop("_id")) 
     return doc
 
 

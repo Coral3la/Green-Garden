@@ -12,3 +12,15 @@
   # Async HTTP client — used to call the OpenAI API from the backend
   httpx==0.28.1
 
+  # Authentication & Validation (Added for multi-user gardens)
+  # Hash passwords so the DB never stores plaintext
+  bcrypt==5.0.0
+
+  # Create and verify signed JWTs
+  pyjwt==2.13.0
+
+  # Form parsing for login and Swagger UI "Authorize" button
+  python-multipart==0.0.32
+
+  # Enables Pydantic's EmailStr for automatic email validation
+  email-validator==2.3.0
