@@ -49,7 +49,10 @@ async def chat(request: ChatRequest):
     if not settings.openai_api_key:
         raise HTTPException(
             status_code=503,
-            detail="AI chat is not configured. Set OPENAI_API_KEY in the backend .env file.",
+            detail=(
+                "AI chat is not configured. "
+                "Set OPENAI_API_KEY in the backend .env file."
+            ),
         )
 
     # 2. Build the request for OpenAI: system prompt first, then the conversation.

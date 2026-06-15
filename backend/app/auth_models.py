@@ -1,4 +1,5 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -16,7 +17,7 @@ class UserOut(BaseModel):
     id: str
     email: EmailStr
     display_name: str
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class Token(BaseModel):

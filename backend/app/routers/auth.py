@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -11,7 +11,6 @@ from app.security import (
     hash_password,
     verify_password,
 )
-
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 COLLECTION = "users"
@@ -33,7 +32,7 @@ async def register(user: UserCreate):
         "email": user.email,
         "hashed_password": hash_password(user.password),
         "display_name": user.display_name,
-        "created_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
     }
     result = await db[COLLECTION].insert_one(doc)
     created = await db[COLLECTION].find_one({"_id": result.inserted_id})

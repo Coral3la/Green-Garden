@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from pydantic import BaseModel, Field
 
-  
+
 class PlantBase(BaseModel):
     name: str
     imgUrl: str
@@ -11,7 +12,7 @@ class PlantBase(BaseModel):
 
 class PlantCreate(PlantBase):
     # Client usually omits this; default to "right now" in UTC.
-    lastWateredAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    lastWateredAt: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class PlantUpdate(BaseModel):
@@ -26,4 +27,3 @@ class PlantUpdate(BaseModel):
 class PlantOut(PlantBase):
     id: str
     lastWateredAt: datetime
-

@@ -1,0 +1,30 @@
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes, I: import sorting, UP: pyupgrade, B: bugbear
+select = ["E", "W", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency-injection defaults (Depends/Query/…) are idiomatic, not B008 bugs.
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.Query",
+    "fastapi.Path",
+    "fastapi.Header",
+    "fastapi.Cookie",
+    "fastapi.Body",
+    "fastapi.Form",
+    "fastapi.Security",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+# Put the backend root on sys.path so tests can `import main` / `from app ...`.
+pythonpath = ["."]
+
+[tool.ruff.lint.per-file-ignores]
+# conftest must set env vars before importing the app, so imports aren't at top.
+"tests/conftest.py" = ["E402"]

@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import connect_to_mongo, close_mongo_connection
-from app.routers import plants, chat, auth
+
+from app.database import close_mongo_connection, connect_to_mongo
+from app.routers import auth, chat, plants
 
 
 @asynccontextmanager
