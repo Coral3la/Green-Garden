@@ -50,6 +50,20 @@ export class PlantListComponent {
     this.consultingPlant.set(undefined);
   }
 
+  // Close a modal only when the click lands on the backdrop itself, not its
+  // contents — this replaces a stopPropagation handler on the inner element,
+  // which screen readers would otherwise treat as a stray interactive target.
+  onBackdropClick(event: MouseEvent, which: 'edit' | 'consult'): void {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+    if (which === 'edit') {
+      this.closeModal();
+    } else {
+      this.closeConsultModal();
+    }
+  }
+
   onWatered(id: string): void {
     this.plantService.waterPlant(id);
   }

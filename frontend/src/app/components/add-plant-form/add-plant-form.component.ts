@@ -15,7 +15,7 @@ export class AddPlantFormComponent {
 
   readonly plantToEdit = input<Plant>();
   readonly formSaved = output<void>();
-  readonly cancel = output<void>();
+  readonly cancelled = output<void>();
 
   plantForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -65,6 +65,6 @@ export class AddPlantFormComponent {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelled.emit();
   }
 }
