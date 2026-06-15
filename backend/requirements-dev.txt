@@ -1,0 +1,12 @@
+# Dev-only tooling — install with: pip install -r requirements-dev.txt
+-r requirements.txt
+
+# Lint + format (one tool)
+ruff==0.15.17
+
+# Test runner + async support
+pytest==9.1.0
+pytest-asyncio==1.3.0
+
+# In-memory async MongoDB so tests need no real database
+mongomock-motor==0.0.36

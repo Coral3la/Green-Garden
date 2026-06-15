@@ -12,7 +12,7 @@ MODEL = "gpt-4o-mini"
 
 # ---- The shape of what the frontend sends us -----------------------------
 class ChatMessage(BaseModel):
-    role: str          # "user" or "assistant"
+    role: str  # "user" or "assistant"
     content: str
 
 
@@ -49,7 +49,10 @@ async def chat(request: ChatRequest):
     if not settings.openai_api_key:
         raise HTTPException(
             status_code=503,
-            detail="AI chat is not configured. Set OPENAI_API_KEY in the backend .env file.",
+            detail=(
+                "AI chat is not configured. "
+                "Set OPENAI_API_KEY in the backend .env file."
+            ),
         )
 
     # 2. Build the request for OpenAI: system prompt first, then the conversation.
@@ -71,10 +74,14 @@ async def chat(request: ChatRequest):
             response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         # OpenAI answered, but with an error (bad key, no credit, rate limit...).
-        raise HTTPException(status_code=502, detail="The AI service returned an error.") from exc
+        raise HTTPException(
+            status_code=502, detail="The AI service returned an error."
+        ) from exc
     except httpx.HTTPError as exc:
         # Couldn't even reach OpenAI (network/timeout).
-        raise HTTPException(status_code=502, detail="Could not reach the AI service.") from exc
+        raise HTTPException(
+            status_code=502, detail="Could not reach the AI service."
+        ) from exc
 
     # 4. Pull the assistant's text out of OpenAI's response and return it.
     data = response.json()

@@ -20,14 +20,20 @@
 @if (modalOpen()) {
   <div
     class="modal-backdrop"
-    (click)="closeModal()"
+    tabindex="-1"
+    (click)="onBackdropClick($event, 'edit')"
     (document:keydown.escape)="closeModal()"
   >
-    <div class="modal-content" (click)="$event.stopPropagation()">
+    <div
+      class="modal-content"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Add or edit a plant"
+    >
       <app-add-plant-form
         [plantToEdit]="editingPlant()"
         (formSaved)="closeModal()"
-        (cancel)="closeModal()"
+        (cancelled)="closeModal()"
       />
     </div>
   </div>
@@ -55,12 +61,15 @@
 @if (consultingPlant(); as plant) {
   <div
     class="modal-backdrop"
-    (click)="closeConsultModal()"
+    tabindex="-1"
+    (click)="onBackdropClick($event, 'consult')"
     (document:keydown.escape)="closeConsultModal()"
   >
     <div
       class="modal-content modal-content--consult"
-      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Botanic expert consultation"
     >
       <button
         type="button"

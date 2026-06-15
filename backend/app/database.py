@@ -1,4 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+
 from app.config import settings
 
 
@@ -13,8 +14,8 @@ mongo = MongoDB()
 async def connect_to_mongo() -> None:
     mongo.client = AsyncIOMotorClient(settings.mongo_uri)
     mongo.database = mongo.client[settings.database_name]
-  # Force a real round-trip so we fail loudly *now* if the cluster is unreachable:
     await mongo.client.admin.command("ping")
+    await mongo.database["users"].create_index("email", unique=True)
     print("✅ Connected to MongoDB")
 
 

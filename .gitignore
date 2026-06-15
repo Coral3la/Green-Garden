@@ -5,3 +5,6 @@ Thumbs.db
 # Editor folders (frontend/ has its own .gitignore too)
 .idea/
 *.swp
+
+# Claude Code — personal, machine-specific settings (rules/ and CLAUDE.md are shared)
+.claude/settings.local.json
