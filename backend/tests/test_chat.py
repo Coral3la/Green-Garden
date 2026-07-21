@@ -38,13 +38,18 @@ def _fake_client_factory(post):
     return _FakeAsyncClient
 
 
-async def test_chat_without_api_key_returns_503(client, monkeypatch):
-    monkeypatch.setattr(chat.settings, "openai_api_key", "")
+async def test_chat_without_token_returns_401(client):
     resp = await client.post("/chat", json=CHAT_PAYLOAD)
+    assert resp.status_code == 401
+
+
+async def test_chat_without_api_key_returns_503(client, auth_headers, monkeypatch):
+    monkeypatch.setattr(chat.settings, "openai_api_key", "")
+    resp = await client.post("/chat", json=CHAT_PAYLOAD, headers=auth_headers)
     assert resp.status_code == 503
 
 
-async def test_chat_success_returns_reply(client, monkeypatch):
+async def test_chat_success_returns_reply(client, auth_headers, monkeypatch):
     monkeypatch.setattr(chat.settings, "openai_api_key", "sk-test")
 
     async def fake_post(*args, **kwargs):
@@ -53,17 +58,17 @@ async def test_chat_success_returns_reply(client, monkeypatch):
         )
 
     monkeypatch.setattr(chat.httpx, "AsyncClient", _fake_client_factory(fake_post))
-    resp = await client.post("/chat", json=CHAT_PAYLOAD)
+    resp = await client.post("/chat", json=CHAT_PAYLOAD, headers=auth_headers)
     assert resp.status_code == 200
     assert resp.json()["reply"] == "Water it weekly."  # trimmed by the endpoint
 
 
-async def test_chat_upstream_failure_returns_502(client, monkeypatch):
+async def test_chat_upstream_failure_returns_502(client, auth_headers, monkeypatch):
     monkeypatch.setattr(chat.settings, "openai_api_key", "sk-test")
 
     async def fake_post(*args, **kwargs):
         raise httpx.ConnectError("network down")
 
     monkeypatch.setattr(chat.httpx, "AsyncClient", _fake_client_factory(fake_post))
-    resp = await client.post("/chat", json=CHAT_PAYLOAD)
+    resp = await client.post("/chat", json=CHAT_PAYLOAD, headers=auth_headers)
     assert resp.status_code == 502

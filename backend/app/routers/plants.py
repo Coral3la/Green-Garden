@@ -1,9 +1,10 @@
 from bson import ObjectId
 from bson.errors import InvalidId
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.database import get_database
 from app.models import PlantCreate, PlantOut, PlantUpdate
+from app.security import get_current_user
 
 router = APIRouter(prefix="/plants", tags=["plants"])
 
@@ -17,6 +18,7 @@ def serialize_plant(doc: dict) -> dict:
     """Convert a MongoDB document into the shape PlantOut expects."""
     doc = dict(doc)
     doc["id"] = str(doc.pop("_id"))
+    doc.pop("owner_id", None)
     return doc
 
 
@@ -29,37 +31,53 @@ def to_object_id(plant_id: str) -> ObjectId:
 
 
 @router.get("", response_model=list[PlantOut])
-async def list_plants():
+async def list_plants(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    docs = await db[COLLECTION].find().to_list(length=None)
+    docs = (
+        await db[COLLECTION]
+        .find({"owner_id": current_user["_id"]})
+        .to_list(length=None)
+    )
     return [serialize_plant(doc) for doc in docs]
 
 
 @router.post("", response_model=PlantOut, status_code=status.HTTP_201_CREATED)
-async def create_plant(plant: PlantCreate):
+async def create_plant(
+    plant: PlantCreate, current_user: dict = Depends(get_current_user)
+):
     db = get_database()
-    result = await db[COLLECTION].insert_one(plant.model_dump())
+    doc = plant.model_dump()
+    doc["owner_id"] = current_user["_id"]
+    result = await db[COLLECTION].insert_one(doc)
     created = await db[COLLECTION].find_one({"_id": result.inserted_id})
     return serialize_plant(created)
 
 
 @router.get("/{plant_id}", response_model=PlantOut)
-async def get_plant(plant_id: str):
+async def get_plant(plant_id: str, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    doc = await db[COLLECTION].find_one({"_id": to_object_id(plant_id)})
+    doc = await db[COLLECTION].find_one(
+        {"_id": to_object_id(plant_id), "owner_id": current_user["_id"]}
+    )
     if doc is None:
         raise PLANT_NOT_FOUND
     return serialize_plant(doc)
 
 
 @router.patch("/{plant_id}", response_model=PlantOut)
-async def update_plant(plant_id: str, updates: PlantUpdate):
+async def update_plant(
+    plant_id: str,
+    updates: PlantUpdate,
+    current_user: dict = Depends(get_current_user),
+):
     db = get_database()
     oid = to_object_id(plant_id)
     changes = updates.model_dump(exclude_unset=True)
     if not changes:
         raise HTTPException(status_code=400, detail="No fields provided to update")
-    result = await db[COLLECTION].update_one({"_id": oid}, {"$set": changes})
+    result = await db[COLLECTION].update_one(
+        {"_id": oid, "owner_id": current_user["_id"]}, {"$set": changes}
+    )
     if result.matched_count == 0:
         raise PLANT_NOT_FOUND
     doc = await db[COLLECTION].find_one({"_id": oid})
@@ -67,8 +85,10 @@ async def update_plant(plant_id: str, updates: PlantUpdate):
 
 
 @router.delete("/{plant_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_plant(plant_id: str):
+async def delete_plant(plant_id: str, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    result = await db[COLLECTION].delete_one({"_id": to_object_id(plant_id)})
+    result = await db[COLLECTION].delete_one(
+        {"_id": to_object_id(plant_id), "owner_id": current_user["_id"]}
+    )
     if result.deleted_count == 0:
         raise PLANT_NOT_FOUND

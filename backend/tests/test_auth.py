@@ -1,3 +1,6 @@
+from tests.test_plants import sample_plant
+
+
 def credentials() -> dict:
     return {
         "email": "gardener@example.com",
@@ -54,6 +57,27 @@ async def test_login_wrong_password_returns_401(client):
     assert resp.status_code == 401
 
 
-async def test_me_without_token_returns_401(client):
-    resp = await client.get("/auth/me")
+async def test_list_without_token_returns_401(client):
+    assert (await client.get("/plants")).status_code == 401
+
+
+async def test_create_without_token_returns_401(client):
+    resp = await client.post("/plants", json=sample_plant())
     assert resp.status_code == 401
+
+
+async def test_plants_are_scoped_per_user(client, auth_headers, register_user):
+    created = (
+        await client.post("/plants", json=sample_plant(), headers=auth_headers)
+    ).json()
+    pid = created["id"]
+
+    other = await register_user("intruder@example.com")
+    # The second user sees an empty garden...
+    assert (await client.get("/plants", headers=other)).json() == []
+    # ...and cannot read, modify, or delete the first user's plant.
+    assert (await client.get(f"/plants/{pid}", headers=other)).status_code == 404
+    assert (
+        await client.patch(f"/plants/{pid}", json={"location": "X"}, headers=other)
+    ).status_code == 404
+    assert (await client.delete(f"/plants/{pid}", headers=other)).status_code == 404

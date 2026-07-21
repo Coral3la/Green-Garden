@@ -16,6 +16,7 @@ async def connect_to_mongo() -> None:
     mongo.database = mongo.client[settings.database_name]
     await mongo.client.admin.command("ping")
     await mongo.database["users"].create_index("email", unique=True)
+    await mongo.database["plants"].create_index("owner_id")
     print("✅ Connected to MongoDB")
 
 

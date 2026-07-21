@@ -1,8 +1,9 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Plant } from '../models/plant.model';
 import { needsWater } from '../models/watering';
+import { AuthService } from './auth.service';
 
 interface PlantDto {
   id: string;
@@ -18,6 +19,7 @@ interface PlantDto {
 })
 export class PlantService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
   private readonly baseUrl = `${environment.apiUrl}/plants`;
   private plantsSignal = signal<Plant[]>([]);
   readonly plants = this.plantsSignal.asReadonly();
@@ -29,7 +31,16 @@ export class PlantService {
   );
 
   constructor() {
-    this.loadPlants();
+    // Plants are per-user now, so loading them is driven by auth rather than
+    // done once on startup: fetch when a token arrives, and clear on logout so
+    // the next user never sees the previous one's garden.
+    effect(() => {
+      if (this.auth.isLoggedIn()) {
+        this.loadPlants();
+      } else {
+        this.plantsSignal.set([]);
+      }
+    });
   }
 
   private toPlant(dto: PlantDto): Plant {

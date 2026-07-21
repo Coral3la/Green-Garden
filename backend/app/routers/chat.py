@@ -1,8 +1,9 @@
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from app.config import settings
+from app.security import get_current_user
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -44,7 +45,7 @@ def build_system_prompt(plant: PlantContext) -> str:
 
 
 @router.post("", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest, current_user: dict = Depends(get_current_user)):
     # 1. Refuse early (with a clear message) if no key is configured.
     if not settings.openai_api_key:
         raise HTTPException(

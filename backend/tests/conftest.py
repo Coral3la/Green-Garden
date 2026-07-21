@@ -33,3 +33,30 @@ async def client():
 
     database.mongo.client = None
     database.mongo.database = None
+
+
+@pytest_asyncio.fixture
+def register_user(client):
+    """Factory: register + login a user, return their Bearer auth headers."""
+
+    async def _register(email: str = "gardener@example.com") -> dict:
+        await client.post(
+            "/auth/register",
+            json={
+                "email": email,
+                "password": "secret123",
+                "display_name": "Gardener",
+            },
+        )
+        login = await client.post(
+            "/auth/login", data={"username": email, "password": "secret123"}
+        )
+        return {"Authorization": f"Bearer {login.json()['access_token']}"}
+
+    return _register
+
+
+@pytest_asyncio.fixture
+async def auth_headers(register_user):
+    """Auth headers for a single default user."""
+    return await register_user()
