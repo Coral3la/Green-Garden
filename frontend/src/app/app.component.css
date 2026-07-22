@@ -9,6 +9,18 @@
   padding-bottom: 4rem;
 }
 
+/* Signed out there is no content below the hero, so centre it in the
+   viewport rather than leaving a dead expanse of paper underneath. */
+.page--auth {
+  min-height: 100vh;
+  display: grid;
+  align-content: center;
+}
+
+.page--auth .hero {
+  margin-bottom: 0;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -17,15 +29,19 @@
   padding: clamp(2.25rem, 5vw, 3.75rem) clamp(1.5rem, 4vw, 3rem);
   margin-bottom: 2.5rem;
   color: #f3f6ee;
-  background:
-    radial-gradient(120% 140% at 0% 0%, #2f6b41 0%, #1c4429 45%, #122e1c 100%);
+  background: radial-gradient(
+    120% 140% at 0% 0%,
+    #2f6b41 0%,
+    #1c4429 45%,
+    #122e1c 100%
+  );
   box-shadow: var(--shadow-lg);
   isolation: isolate;
 }
 
 /* grain texture on the dark panel */
 .hero::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -47,7 +63,11 @@
   height: 320px;
   top: -130px;
   right: -60px;
-  background: radial-gradient(circle at 30% 30%, rgba(142, 216, 107, 0.9), transparent 70%);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(142, 216, 107, 0.9),
+    transparent 70%
+  );
   animation: drift 14s ease-in-out infinite;
 }
 
@@ -56,13 +76,30 @@
   height: 240px;
   bottom: -120px;
   left: 18%;
-  background: radial-gradient(circle at 50% 50%, rgba(203, 122, 82, 0.7), transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(203, 122, 82, 0.7),
+    transparent 70%
+  );
   animation: drift 18s ease-in-out infinite reverse;
 }
 
 .hero__content {
   position: relative;
   max-width: 30ch;
+}
+
+/* Signed out, the hero carries the sign-in card alongside the copy. */
+.hero--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 25rem);
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: center;
+}
+
+.hero__auth {
+  position: relative;
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.24s both;
 }
 
 .hero__eyebrow {
@@ -111,6 +148,43 @@
   animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.16s both;
 }
 
+.hero__session {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.35rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(243, 246, 238, 0.82);
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.24s both;
+}
+
+.hero__session strong {
+  font-weight: 600;
+  color: #fbfdf7;
+}
+
+.hero__signout {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f3f6ee;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.hero__signout:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -123,11 +197,23 @@
 }
 
 @keyframes drift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   50% {
     transform: translate(-18px, 22px) scale(1.08);
+  }
+}
+
+/* Stack the card under the copy before the two columns get cramped. */
+@media (max-width: 880px) {
+  .hero--split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero--split .hero__content {
+    max-width: none;
   }
 }
 

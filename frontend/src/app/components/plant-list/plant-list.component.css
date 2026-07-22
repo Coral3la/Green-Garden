@@ -31,7 +31,10 @@
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 6px 18px -6px rgba(28, 68, 41, 0.7);
-  transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.25s ease,
+    filter 0.2s ease;
 }
 
 .btn-add__plus {
@@ -119,7 +122,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---------- Modal ---------- */
@@ -149,13 +154,23 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ---------- Grid ---------- */
@@ -170,7 +185,13 @@
   text-align: center;
   padding: 3.5rem 1.5rem;
   background:
-    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(47, 107, 65, 0.025) 10px, rgba(47, 107, 65, 0.025) 20px),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(47, 107, 65, 0.025) 10px,
+      rgba(47, 107, 65, 0.025) 20px
+    ),
     var(--surface);
   border: 1.5px dashed var(--line-strong);
   border-radius: var(--radius-lg);
@@ -219,7 +240,10 @@
   color: var(--ink-soft);
   cursor: pointer;
   z-index: 10;
-  transition: transform 0.18s ease, background 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .modal-close:hover {

@@ -6,7 +6,9 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease,
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s ease,
     border-color 0.3s ease;
   animation: card-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -39,10 +41,14 @@
 }
 
 .plant-card__media::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15, 32, 22, 0.28) 0%, transparent 38%);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 32, 22, 0.28) 0%,
+    transparent 38%
+  );
   pointer-events: none;
 }
 
@@ -186,7 +192,10 @@
   color: #fff;
   background: linear-gradient(135deg, var(--leaf), var(--leaf-deep));
   border: 1px solid transparent;
-  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 .needs-water .btn-water {
@@ -210,7 +219,10 @@
   cursor: pointer;
   background: var(--surface-2);
   border: 1px solid var(--line);
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
 }
 
 .btn-edit:hover {
@@ -241,7 +253,10 @@
   color: var(--leaf-deep);
   background: var(--sprout-soft);
   border: 1px solid color-mix(in srgb, var(--sprout) 35%, transparent);
-  transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-consult:hover {
@@ -263,6 +278,11 @@
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }

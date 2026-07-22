@@ -1,5 +1,5 @@
-<div class="page container">
-  <header class="hero">
+<div class="page container" [class.page--auth]="!isLoggedIn()">
+  <header class="hero" [class.hero--split]="heroHasCard()">
     <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
     <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
 
@@ -11,11 +11,49 @@
       <p class="tagline">
         Track watering, consult a botanic expert, and keep every leaf thriving.
       </p>
+
+      <!-- Gated on the session, not the profile: if /auth/me fails for any
+           reason other than a 401, we stay signed in with no profile to show —
+           and signing out must still be reachable. -->
+      @if (sessionReady()) {
+        <p class="hero__session">
+          @if (user(); as currentUser) {
+            <span
+              >Signed in as <strong>{{ currentUser.displayName }}</strong></span
+            >
+          }
+          <button
+            type="button"
+            class="hero__signout"
+            (click)="changingPassword.set(!changingPassword())"
+          >
+            {{ changingPassword() ? 'Close' : 'Change password' }}
+          </button>
+          <button type="button" class="hero__signout" (click)="onSignOut()">
+            Sign out
+          </button>
+        </p>
+      }
     </div>
+
+    <!-- On the token rather than the session, deliberately: while a stored
+         token is being vetted neither this nor the garden shows, so an expired
+         token resolves to the login form without the garden flashing first. -->
+    @if (!isLoggedIn()) {
+      <div class="hero__auth">
+        <app-auth-form />
+      </div>
+    } @else if (changingPassword()) {
+      <div class="hero__auth">
+        <app-change-password (closed)="changingPassword.set(false)" />
+      </div>
+    }
   </header>
 
-  <main>
-    <app-dashboard />
-    <app-plant-list />
-  </main>
+  @if (sessionReady()) {
+    <main>
+      <app-dashboard />
+      <app-plant-list />
+    </main>
+  }
 </div>

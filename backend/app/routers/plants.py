@@ -80,7 +80,7 @@ async def update_plant(
     )
     if result.matched_count == 0:
         raise PLANT_NOT_FOUND
-    doc = await db[COLLECTION].find_one({"_id": oid})
+    doc = await db[COLLECTION].find_one({"_id": oid, "owner_id": current_user["_id"]})
     return serialize_plant(doc)
 
 

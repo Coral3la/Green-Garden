@@ -12,8 +12,7 @@ describe('AddPlantFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AddPlantFormComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AddPlantFormComponent);
     component = fixture.componentInstance;

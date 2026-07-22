@@ -17,8 +17,10 @@ FastAPI + async Motor (MongoDB) + pydantic-settings.
 - `routers/plants.py` — `/plants` CRUD.
 - `routers/chat.py` — `/chat` builds the system prompt server-side and proxies
   to OpenAI (`gpt-4o-mini`).
-- `routers/auth.py` + `security.py` + `auth_models.py` — JWT auth (see the
-  auth-migration note in the architecture rule for current enforcement status).
+- `routers/auth.py` + `security.py` + `auth_models.py` — JWT auth (see the auth
+  section of the architecture rule for what is enforced where).
+- `rate_limit.py` — in-process failure throttling for `/auth/login`. Global
+  state, so `tests/conftest.py` clears it between tests.
 
 ## Conventions
 - Mongo `_id` is serialized to a string `id` field at the serialization boundary

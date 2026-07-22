@@ -12,6 +12,7 @@ from httpx import ASGITransport, AsyncClient
 from mongomock_motor import AsyncMongoMockClient
 
 from app import database
+from app.rate_limit import login_limiter
 from main import app
 
 
@@ -26,6 +27,9 @@ async def client():
     mock_client = AsyncMongoMockClient()
     database.mongo.client = mock_client
     database.mongo.database = mock_client[os.environ["DATABASE_NAME"]]
+    # The login limiter is module-level state that would otherwise carry failed
+    # attempts from one test into the next.
+    login_limiter.clear()
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
@@ -33,6 +37,7 @@ async def client():
 
     database.mongo.client = None
     database.mongo.database = None
+    login_limiter.clear()
 
 
 @pytest_asyncio.fixture

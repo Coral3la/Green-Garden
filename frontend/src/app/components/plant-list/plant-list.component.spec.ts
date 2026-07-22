@@ -12,8 +12,7 @@ describe('PlantListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PlantListComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PlantListComponent);
     component = fixture.componentInstance;

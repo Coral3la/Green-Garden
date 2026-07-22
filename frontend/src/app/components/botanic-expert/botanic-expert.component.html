@@ -16,8 +16,8 @@
     @if (chatHistory().length === 0) {
       <div class="consult__empty">
         <span class="consult__empty-icon" aria-hidden="true">🪴</span>
-        Ask anything about your {{ plant().name }} — watering, light,
-        yellowing leaves, repotting, and more.
+        Ask anything about your {{ plant().name }} — watering, light, yellowing
+        leaves, repotting, and more.
       </div>
     }
 
@@ -42,20 +42,35 @@
     }
 
     @if (errorMessage()) {
-      <div class="consult__error">{{ errorMessage() }}</div>
+      <div class="consult__error" role="alert">{{ errorMessage() }}</div>
     }
   </div>
 
-  <div class="consult__input">
-    <textarea
-      rows="1"
-      placeholder="e.g. The leaves are turning yellow, what should I do?"
-      [ngModel]="userInput()"
-      (ngModelChange)="userInput.set($event)"
-      (keydown)="onKeydown($event)"
-    ></textarea>
-    <button (click)="sendMessage()" [disabled]="!canSend()" aria-label="Send message">
-      <span aria-hidden="true">↑</span>
-    </button>
-  </div>
+  <!-- Chat being switched off is a state, not a failure, so it replaces the
+       composer instead of sitting above it as one more error to retry. -->
+  @if (unavailable()) {
+    <p class="consult__off">
+      <span aria-hidden="true">💤</span>
+      The botanic expert is switched off — this server has no OpenAI key
+      configured. Set <code>OPENAI_API_KEY</code> in the backend
+      <code>.env</code> to enable it.
+    </p>
+  } @else {
+    <div class="consult__input">
+      <textarea
+        rows="1"
+        placeholder="e.g. The leaves are turning yellow, what should I do?"
+        [ngModel]="userInput()"
+        (ngModelChange)="userInput.set($event)"
+        (keydown)="onKeydown($event)"
+      ></textarea>
+      <button
+        (click)="sendMessage()"
+        [disabled]="!canSend()"
+        aria-label="Send message"
+      >
+        <span aria-hidden="true">↑</span>
+      </button>
+    </div>
+  }
 </div>

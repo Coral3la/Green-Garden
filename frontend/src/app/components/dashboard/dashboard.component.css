@@ -19,7 +19,9 @@
   padding: 1.5rem 1.6rem;
   box-shadow: var(--shadow-sm), var(--shadow-inset);
   overflow: hidden;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease;
   animation: card-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
@@ -29,7 +31,7 @@
 
 /* accent stripe */
 .stat-card::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 0;
@@ -104,7 +106,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(47, 134, 196, 0.35);
   }

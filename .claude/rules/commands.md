@@ -25,9 +25,20 @@ npm run build      # production build
 npm test           # Karma + Jasmine, watch mode in Chrome
 npm run lint       # ESLint (angular-eslint, flat config in eslint.config.js)
 npm run format     # Prettier --write across the project
+npm run format:check   # Prettier in check mode — what CI runs
 ```
+
+ESLint says nothing about formatting, so `npm run lint` passing does **not**
+mean the tree is formatted. Run `npm run format` before committing.
 
 To run a **single test**, temporarily use Jasmine's `fdescribe`/`fit` focus
 helpers in the relevant `.spec.ts`, or narrow the files Karma loads via the
 `test` glob in `frontend/tsconfig.spec.json`. There is no built-in `--grep`.
 For a non-interactive single run: `npm test -- --watch=false --browsers=ChromeHeadless`.
+
+## CI
+
+`.github/workflows/ci.yml` runs on every push to `main` and every PR: ruff
+(check + format) and pytest for the backend, ESLint + Prettier + Karma + build
+for the frontend. It needs no secrets — the backend suite fills in its own
+settings and runs on mongomock.

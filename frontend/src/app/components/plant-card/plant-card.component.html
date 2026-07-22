@@ -3,7 +3,7 @@
     <img [src]="plant().imgUrl" [alt]="plant().name" class="plant-img" />
     <span class="status-badge">
       <span class="status-badge__dot"></span>
-      {{ needsWater() ? "Needs water" : "Thriving" }}
+      {{ needsWater() ? 'Needs water' : 'Thriving' }}
     </span>
   </div>
 
@@ -19,7 +19,9 @@
     <div class="water-meter">
       <div class="water-meter__head">
         <span class="water-meter__label">Watering schedule</span>
-        <span class="water-meter__freq">every {{ plant().wateringFrequencyDays }} days</span>
+        <span class="water-meter__freq"
+          >every {{ plant().wateringFrequencyDays }} days</span
+        >
       </div>
       <div class="progress-bar">
         <div class="progress-fill" [style.width.%]="progressPercent()"></div>
@@ -30,8 +32,22 @@
       <button (click)="onWatered()" class="btn-water">
         <span aria-hidden="true">💧</span> Watered
       </button>
-      <button (click)="onEdit()" class="btn-icon btn-edit" aria-label="Edit plant" title="Edit">✏️</button>
-      <button (click)="onDelete()" class="btn-icon btn-delete" aria-label="Delete plant" title="Delete">🗑️</button>
+      <button
+        (click)="onEdit()"
+        class="btn-icon btn-edit"
+        aria-label="Edit plant"
+        title="Edit"
+      >
+        ✏️
+      </button>
+      <button
+        (click)="onDelete()"
+        class="btn-icon btn-delete"
+        aria-label="Delete plant"
+        title="Delete"
+      >
+        🗑️
+      </button>
     </div>
 
     <button (click)="onConsult()" class="btn-consult">

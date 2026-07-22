@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { Plant } from '../../models/plant.model';
@@ -33,9 +33,16 @@ export class BotanicExpertComponent {
   readonly userInput = signal('');
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  // A 503 means this server has no OpenAI key: chat is *off*, not broken.
+  // Retrying can never help, so the composer closes rather than inviting the
+  // user to keep trying against a red error.
+  readonly unavailable = signal(false);
 
   readonly canSend = computed(
-    () => this.userInput().trim().length > 0 && !this.isLoading(),
+    () =>
+      this.userInput().trim().length > 0 &&
+      !this.isLoading() &&
+      !this.unavailable(),
   );
 
   sendMessage(): void {
@@ -66,14 +73,31 @@ export class BotanicExpertComponent {
         ]);
         this.isLoading.set(false);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         console.error('Chat request failed', err);
-        this.errorMessage.set(
-          'Sorry, the consultation failed. Please try again.',
-        );
         this.isLoading.set(false);
+        if (err.status === 503) {
+          this.unavailable.set(true);
+          return;
+        }
+        this.errorMessage.set(this.messageFor(err));
       },
     });
+  }
+
+  private messageFor(err: HttpErrorResponse): string {
+    if (err.status === 0) {
+      return 'Could not reach the server. Is the backend running?';
+    }
+    if (err.status === 502) {
+      return 'The botanic expert is unreachable right now. Please try again in a moment.';
+    }
+    // A 401 unmounts the garden before this renders — the interceptor clears
+    // the session — so this is a safety net rather than a message users see.
+    if (err.status === 401) {
+      return 'Your session expired. Sign in again to keep chatting.';
+    }
+    return 'Sorry, the consultation failed. Please try again.';
   }
 
   onKeydown(event: KeyboardEvent): void {
